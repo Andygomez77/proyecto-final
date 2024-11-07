@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#000000"
+    android:padding="16dp">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Logo de la aplicación"/>
+
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:background="@android:color/darker_gray"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BDBDBD"
+        android:layout_marginBottom="16dp"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        android:background="@android:color/darker_gray"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BDBDBD"
+        android:layout_marginBottom="16dp"
+        android:inputType="textPassword"/>
+
+
+    <CheckBox
+        android:id="@+id/subscribe_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suscríbete para recibir las últimas novedades de la aplicación, ofertas y noticias. Puedes desuscribirte en cualquier momento."
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"
+        android:textSize="12sp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Al usar esta aplicación aceptas nuestros "
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Términos de Uso"
+            android:textColor="#FFE600"
+            android:textSize="12sp"
+            android:layout_marginEnd="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="y"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:layout_marginEnd="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Política de Privacidad"
+            android:textColor="#FFE600"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/acceder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CREAR CUENTA"
+        android:backgroundTint="#F60000"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Ya tienes una cuenta? "
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/acceder2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Acceder"
+        android:textColor="#FFE600"
+        android:textSize="14sp"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>
