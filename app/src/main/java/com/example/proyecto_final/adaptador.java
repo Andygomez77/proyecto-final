@@ -49,7 +49,7 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
         rcv_comics.setAdapter(new comicadaptador(comicList, this));
 
         //
-        String[] opciones = {"Settings","Cerrar"};
+        String[] opciones = {"Settings","Cerrar2"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -59,7 +59,7 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
             case "Settings":
 
                 break;
-            case "Cerrar":
+            case "Cerrar2":
 
                 break;
 
