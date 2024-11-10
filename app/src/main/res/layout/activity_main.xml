@@ -12,11 +12,11 @@
         android:id="@+id/logo"
         android:layout_width="203dp"
         android:layout_height="81dp"
-        android:layout_marginTop="432dp"
+        android:layout_marginTop="448dp"
         android:background="@drawable/logo2"
         android:contentDescription="Logo de la aplicación"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintHorizontal_bias="0.397"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
