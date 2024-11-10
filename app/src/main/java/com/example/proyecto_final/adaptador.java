@@ -1,10 +1,13 @@
 package com.example.proyecto_final;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,13 +24,16 @@ import java.util.List;
 public class adaptador extends AppCompatActivity implements comicadaptador.OnComicClickListener {
 
     RecyclerView rcv_comics;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adaptador);
 
+        spinner = findViewById(R.id.spinner);
         rcv_comics = findViewById(R.id.rcv_comics);
+
         List<comics> comicList = new ArrayList<>();
         comics lis1 = new comics("Comic 1", "https://www.cuartomundo.cl/wp-content/uploads/2019/03/Portadas-marvel-70.jpg", "2021", "Descripción del cómic 1");
         comics lis2 = new comics("Comic 2", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeUCPyR97PVReLNFFxzB2b6IHVIde3lS4dhw&s", "2020", "Descripción del cómic 2");
@@ -41,7 +47,26 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
 
         rcv_comics.setLayoutManager(new GridLayoutManager(this, 2));
         rcv_comics.setAdapter(new comicadaptador(comicList, this));
+
+        //
+        String[] opciones = {"Settings","Cerrar"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        String operador = spinner.getSelectedItem().toString();
+
+        switch (operador) {
+            case "Settings":
+
+                break;
+            case "Cerrar":
+
+                break;
+
+        }
     }
+
+
 
     @Override
     public void onComicClick(comics comic) {
@@ -61,16 +86,19 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
         TextView comicNameDialog = dialog.findViewById(R.id.comic_name_dialog);
         TextView comicYearDialog = dialog.findViewById(R.id.comic_year_dialog);
         TextView comicDescriptionDialog = dialog.findViewById(R.id.comic_description_dialog);
-        Button closeButton = dialog.findViewById(R.id.close_dialog_button);
+
 
         comicNameDialog.setText(comic.getNombre());
         comicYearDialog.setText("Año: " + comic.getYear());
         comicDescriptionDialog.setText(comic.getDescripcion());
         Picasso.get().load(comic.getImagen()).into(comicImageDialog);
 
-        closeButton.setOnClickListener(v -> dialog.dismiss());
+
 
         dialog.show();
     }
+
+
+
 }
 

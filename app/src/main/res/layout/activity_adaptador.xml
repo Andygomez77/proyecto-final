@@ -5,13 +5,79 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".adaptador">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_comics"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:clipToPadding="false"/>
+        android:layout_height="45dp"
+        android:background="@color/black">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:layout_marginLeft="155dp"/>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="150dp"
+            android:popupBackground="@color/black"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_comics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/black">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="comics"
+            android:layout_marginLeft="15dp"
+            android:textSize="18dp"
+            android:backgroundTint="#FD1C22"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-black"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jom"
+            android:layout_marginLeft="25dp"
+            android:textSize="18dp"
+            android:backgroundTint="#FD1C22"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-black"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="personajes"
+            android:layout_marginLeft="25dp"
+            android:textSize="18dp"
+            android:backgroundTint="#FD1C22"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-black"/>
+
+
+
+    </LinearLayout>
 </LinearLayout>
+
