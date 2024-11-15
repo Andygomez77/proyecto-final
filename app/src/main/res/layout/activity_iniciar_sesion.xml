@@ -87,12 +87,13 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"/>
 
-        <TextView
-            android:id="@+id/crear_cuentatxt"
+        <Button
+            android:id="@+id/crear_cuenta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Crear cuenta"
             android:textColor="#FFE600"
+            android:backgroundTint="@color/black"
             android:layout_marginStart="8dp"
             android:textSize="14sp"/>
     </LinearLayout>
