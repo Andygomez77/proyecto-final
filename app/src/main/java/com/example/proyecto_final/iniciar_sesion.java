@@ -19,6 +19,7 @@ public class iniciar_sesion extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
+        Button crearCuenta = findViewById(R.id.crear_cuenta);
         EditText emailEditText = findViewById(R.id.email);
         EditText passwordEditText = findViewById(R.id.password);
         Button accederButton = findViewById(R.id.acceder);
@@ -29,11 +30,16 @@ public class iniciar_sesion extends AppCompatActivity {
 
             if (dbHelper.checkUser(username, password)) {
                 Toast.makeText(iniciar_sesion.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(iniciar_sesion.this, adaptador.class);
+                Intent intent = new Intent(iniciar_sesion.this, FragmentActivity.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(iniciar_sesion.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
             }
         });
+        crearCuenta.setOnClickListener(v -> {
+            Intent intent = new Intent(iniciar_sesion.this, registro.class);
+            startActivity(intent);
+        });
+
     }
 }
