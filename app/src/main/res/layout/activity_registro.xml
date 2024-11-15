@@ -16,6 +16,16 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="Logo de la aplicación"/>
 
+    <EditText
+        android:id="@+id/nombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        android:background="@android:color/darker_gray"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BDBDBD"
+        android:layout_marginBottom="16dp"/>
 
     <EditText
         android:id="@+id/email"
@@ -40,6 +50,18 @@
         android:textColorHint="#BDBDBD"
         android:layout_marginBottom="16dp"
         android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/FechaN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha de nacimiento"
+        android:background="@android:color/darker_gray"
+        android:padding="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#BDBDBD"
+        android:layout_marginBottom="16dp"
+        android:inputType="date"/>
 
 
     <CheckBox
