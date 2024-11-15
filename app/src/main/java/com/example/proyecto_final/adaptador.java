@@ -2,20 +2,28 @@ package com.example.proyecto_final;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.proyecto_final.adaptadores.comicadaptador;
 import com.example.proyecto_final.clases.comics;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,41 +52,59 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
         comicList.add(lis3);
         comicList.add(lis4);
 
-
         rcv_comics.setLayoutManager(new GridLayoutManager(this, 2));
         rcv_comics.setAdapter(new comicadaptador(comicList, this));
 
-        //
-        String[] opciones = {"Settings","Cerrar"};
+        String[] opciones = {"Settings", "Cerrar"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        String operador = spinner.getSelectedItem().toString();
 
-        switch (operador) {
-            case "Settings":
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String operador = parent.getItemAtPosition(position).toString();
+                switch (operador) {
+                    case "Settings":
 
-                break;
-            case "Cerrar":
+                        break;
+                    case "Cerrar":
 
-                break;
+                        cerrarSesion();
+                        Intent intent = new Intent(getApplicationContext(), iniciar_sesion.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+            }
 
-        }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
 
+    private void cerrarSesion() {
+        SharedPreferences preferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear(); // Elimina todos los datos almacenados
+        editor.apply();
+    }
 
     @Override
     public void onComicClick(comics comic) {
         showComicDialog(comic);
     }
 
+
     private void showComicDialog(comics comic) {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_comic_details);
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
 
         dialog.getWindow().setDimAmount(0.8f);
 
@@ -87,18 +113,11 @@ public class adaptador extends AppCompatActivity implements comicadaptador.OnCom
         TextView comicYearDialog = dialog.findViewById(R.id.comic_year_dialog);
         TextView comicDescriptionDialog = dialog.findViewById(R.id.comic_description_dialog);
 
-
         comicNameDialog.setText(comic.getNombre());
         comicYearDialog.setText("Año: " + comic.getYear());
         comicDescriptionDialog.setText(comic.getDescripcion());
         Picasso.get().load(comic.getImagen()).into(comicImageDialog);
 
-
-
         dialog.show();
     }
-
-
-
 }
-

@@ -23,6 +23,8 @@ public class registro extends AppCompatActivity {
 
         EditText emailEditText = findViewById(R.id.email);
         EditText passwordEditText = findViewById(R.id.password);
+        EditText nameEditText = findViewById(R.id.nombre);
+        EditText fechaEdt = findViewById(R.id.FechaN);
         CheckBox subscribeCheckbox = findViewById(R.id.subscribe_checkbox);
         Button crearCuentaButton = findViewById(R.id.crear_cuenta);
         TextView accederText = findViewById(R.id.acceder2);
@@ -41,8 +43,10 @@ public class registro extends AppCompatActivity {
         crearCuentaButton.setOnClickListener(v -> {
             String username = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
+            String name = nameEditText.getText().toString().trim();
+            String fechanacimiento = fechaEdt.getText().toString().trim();
 
-            if (!username.isEmpty() && !password.isEmpty()) {
+            if (!username.isEmpty() && !password.isEmpty() && !name.isEmpty() && !fechanacimiento.isEmpty() ) {
                 dbHelper.addUser(username, password);
                 Toast.makeText(registro.this, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show();
 
