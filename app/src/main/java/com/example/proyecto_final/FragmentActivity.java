@@ -9,11 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -22,20 +20,19 @@ public class FragmentActivity extends AppCompatActivity {
     FrameLayout frameLayout;
     TabLayout tabLayout;
     Spinner spinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_fragment);
 
         spinner = findViewById(R.id.spinner);
-         frameLayout = (FrameLayout) findViewById(R.id.framelayoutid);
-         tabLayout = (TabLayout) findViewById(R.id.tablayoutid);
+        frameLayout = findViewById(R.id.framelayoutid);
+        tabLayout = findViewById(R.id.tablayoutid);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.framelayoutid, new HomeFragment())
                 .addToBackStack(null)
                 .commit();
-
 
         String[] opciones = {"Settings", "Cerrar"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
@@ -43,72 +40,59 @@ public class FragmentActivity extends AppCompatActivity {
         spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                              @Override
-                                              public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                  String operador = parent.getItemAtPosition(position).toString();
-                                                  switch (operador) {
-                                                      case "Settings":
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String operador = parent.getItemAtPosition(position).toString();
+                switch (operador) {
+                    case "Settings":
 
-                                                          break;
-                                                      case "Cerrar":
+                        break;
+                    case "Cerrar":
+                        cerrarSesion();
+                        Intent intent = new Intent(FragmentActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+            }
 
-                                                          cerrarSesion();
-                                                          Intent intent = new Intent(getApplicationContext(), iniciar_sesion.class);
-                                                          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                          startActivity(intent);
-                                                          finish();
-                                                          break;
-                                                  }
-                                              }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
 
-                                              @Override
-                                              public void onNothingSelected(AdapterView<?> adapterView) {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Fragment fragment = null;
+                switch (tab.getPosition()) {
+                    case 0:
+                        fragment = new HomeFragment();
+                        break;
+                    case 1:
+                        fragment = new ComicFragment();
+                        break;
+                    case 2:
+                        fragment = new SettingsFragment();
+                        break;
+                }
+                getSupportFragmentManager().beginTransaction().replace(R.id.framelayoutid, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit();
+            }
 
-                                              }
-                                          });
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
-         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-             @Override
-             public void onTabSelected(TabLayout.Tab tab) {
-                 Fragment fragment = null;
-                 switch (tab.getPosition()){
-                     case 0:
-                         fragment = new HomeFragment();
-                         break;
-                     case 1:
-                         fragment = new ComicFragment();
-                         break;
-                     case 2:
-                         fragment = new SettingsFragment();
-                         break;
-
-                 }
-
-                 getSupportFragmentManager().beginTransaction().replace(R.id.framelayoutid, fragment)
-                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                         .commit();
-
-             }
-
-
-             @Override
-             public void onTabUnselected(TabLayout.Tab tab) {
-
-             }
-
-             @Override
-             public void onTabReselected(TabLayout.Tab tab) {
-
-             }
-         });
-
-
-
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
     }
+
     private void cerrarSesion() {
-        SharedPreferences preferences = getSharedPreferences("MiAppPrefs", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
+        editor.putBoolean("isLoggedIn", false);  // Cerrar la sesión
         editor.apply();
     }
 }
