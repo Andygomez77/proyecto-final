@@ -63,30 +63,39 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
         Call<ComicResponse> call = api.getComics(PUBLIC_KEY, ts, hash);
         call.enqueue(new Callback<ComicResponse>() {
             @Override
+
             public void onResponse(Call<ComicResponse> call, Response<ComicResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     List<ComicResponse.Comic> apiComics = response.body().getData().getResults();
                     if (apiComics != null) {
                         List<comics> comicList = new ArrayList<>();
                         for (ComicResponse.Comic apiComic : apiComics) {
+                            // Manejo de año de lanzamiento
                             String year = "Año desconocido";
                             if (apiComic.getDates() != null && !apiComic.getDates().isEmpty()) {
                                 for (ComicResponse.Comic.Date date : apiComic.getDates()) {
                                     if ("onsaleDate".equals(date.getType())) {
-                                        year = date.getDate().split("-")[0];
+                                        year = date.getDate().split("-")[0]; // Extrae el año
                                         break;
                                     }
                                 }
                             }
 
+
+                            String description = apiComic.getDescription() != null && !apiComic.getDescription().isEmpty()
+                                    ? apiComic.getDescription()
+                                    : "Sin sinopsis disponible";
+
+
                             comics comic = new comics(
                                     apiComic.getTitle(),
                                     apiComic.getThumbnail().getUrl(),
                                     year,
-                                    apiComic.getDescription() != null ? apiComic.getDescription() : "Sin sinopsis disponible"
+                                    description
                             );
                             comicList.add(comic);
                         }
+
 
                         adaptador = new comicadaptador(comicList, ComicFragment.this);
                         rcv_comics.setAdapter(adaptador);
@@ -97,6 +106,7 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
                     Toast.makeText(getContext(), "Error al obtener los cómics: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
+
 
             @Override
             public void onFailure(Call<ComicResponse> call, Throwable t) {

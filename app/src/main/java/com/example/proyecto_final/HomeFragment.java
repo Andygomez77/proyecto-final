@@ -33,7 +33,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private MarvelCharacterAdapter adapter;
 
-
     private final String PUBLIC_KEY = "ad200d22dc07ffd7365f647cad3abebd";
     private final String PRIVATE_KEY = "af2c3744078efb314683abbbeaeb971474343937";
 
@@ -61,18 +60,29 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<MarvelResponse> call, Response<MarvelResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     List<MarvelResponse.Character> apiCharacters = response.body().getData().getResults();
                     List<MarvelCharacter> characters = new ArrayList<>();
 
                     for (MarvelResponse.Character apiCharacter : apiCharacters) {
+
+                        List<String> comics = new ArrayList<>();
+                        if (apiCharacter.getComics() != null && apiCharacter.getComics().getItems() != null) {
+                            for (MarvelResponse.Character.ComicSummary comic : apiCharacter.getComics().getItems()) {
+                                comics.add(comic.getName());
+                            }
+                        }
+
+
                         MarvelCharacter character = new MarvelCharacter(
                                 apiCharacter.getName(),
-                                apiCharacter.getDescription(),
-                                apiCharacter.getThumbnail().getUrl()
+                                apiCharacter.getDescription() != null ? apiCharacter.getDescription() : "Sin descripción",
+                                apiCharacter.getThumbnail().getUrl(),
+                                comics
                         );
+
                         characters.add(character);
                     }
+
 
                     adapter = new MarvelCharacterAdapter(characters);
                     recyclerView.setAdapter(adapter);
@@ -89,7 +99,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 
     private String generateHash(String ts, String privateKey, String publicKey) {
         try {
@@ -111,4 +120,3 @@ public class HomeFragment extends Fragment {
         }
     }
 }
-

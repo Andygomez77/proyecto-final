@@ -42,41 +42,42 @@ public class MarvelCharacterAdapter extends RecyclerView.Adapter<MarvelCharacter
         return characterList.size();
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView characterImage;
-        private final TextView characterName, characterYearOfBirth, characterDescription, characterPowers;
+        private final TextView characterName, characterDescription, characterComics;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             characterImage = itemView.findViewById(R.id.characterThumbnail);
             characterName = itemView.findViewById(R.id.characterName);
-            characterYearOfBirth = itemView.findViewById(R.id.characterYearOfBirth);
             characterDescription = itemView.findViewById(R.id.characterDescription);
-            characterPowers = itemView.findViewById(R.id.characterPowers);
+            characterComics = itemView.findViewById(R.id.characterComics); // Asegúrate de que exista en tu layout
         }
 
         public void bind(MarvelCharacter character) {
             characterName.setText(character.getName() != null ? character.getName() : "Nombre desconocido");
-            characterYearOfBirth.setText("Año de Nacimiento: " +
-                    (character.getYearOfBirth() != null && !character.getYearOfBirth().isEmpty() ? character.getYearOfBirth() : "Desconocido"));
             characterDescription.setText(character.getDescription() != null && !character.getDescription().isEmpty()
                     ? character.getDescription() : "Sin descripción");
-            characterPowers.setText("Poderes: " +
-                    (character.getPowers() != null && !character.getPowers().isEmpty() ? character.getPowers() : "No especificados"));
 
-            // Log para verificar las URLs
+
+            characterComics.setText("Cómics: " +
+                    (character.getComics() != null && !character.getComics().isEmpty()
+                            ? String.join(", ", character.getComics())
+                            : "No disponibles"));
+
+
             Log.d("PICASSO", "Cargando URL: " + character.getThumbnailUrl());
-
             if (character.getThumbnailUrl() != null && !character.getThumbnailUrl().isEmpty()) {
                 Picasso.get()
                         .load(character.getThumbnailUrl())
-                        .placeholder(R.drawable.placeholder_image) // Imagen mientras carga
-                        .error(R.drawable.placeholder_image) // Imagen si ocurre error
+                        .placeholder(R.drawable.placeholder_image)
+                        .error(R.drawable.placeholder_image)
                         .into(characterImage);
             } else {
                 characterImage.setImageResource(R.drawable.placeholder_image);
             }
         }
-
     }
 }
+
