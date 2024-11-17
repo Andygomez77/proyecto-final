@@ -61,29 +61,23 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<MarvelResponse> call, Response<MarvelResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
                     List<MarvelResponse.Character> apiCharacters = response.body().getData().getResults();
                     List<MarvelCharacter> characters = new ArrayList<>();
+
                     for (MarvelResponse.Character apiCharacter : apiCharacters) {
-                        String thumbnailUrl = apiCharacter.getThumbnail() != null ? apiCharacter.getThumbnail().getUrl() : null;
-
-
-                        Log.d("IMAGE_URL", "Thumbnail URL: " + thumbnailUrl);
-
                         MarvelCharacter character = new MarvelCharacter(
                                 apiCharacter.getName(),
                                 apiCharacter.getDescription(),
-                                thumbnailUrl,
-                                0, // Edad predeterminada si no está disponible
-                                "Poder desconocido",
-                                "Año desconocido"
+                                apiCharacter.getThumbnail().getUrl()
                         );
                         characters.add(character);
                     }
+
                     adapter = new MarvelCharacterAdapter(characters);
                     recyclerView.setAdapter(adapter);
                 } else {
                     Log.e("API_ERROR", "Código de estado: " + response.code());
-                    Log.e("API_ERROR", "Cuerpo de error: " + response.errorBody());
                     Toast.makeText(getContext(), "Error al obtener los datos: Código " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
