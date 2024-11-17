@@ -21,6 +21,7 @@ public class MarvelResponse {
         private String name;
         private Thumbnail thumbnail;
         private String description;
+        private ComicList comics;
 
         public String getName() {
             return name;
@@ -34,6 +35,26 @@ public class MarvelResponse {
             return description;
         }
 
+        public ComicList getComics() {
+            return comics;
+        }
+
+        public static class ComicList {
+            private List<ComicSummary> items;
+
+            public List<ComicSummary> getItems() {
+                return items;
+            }
+        }
+
+        public static class ComicSummary {
+            private String name;
+
+            public String getName() {
+                return name;
+            }
+        }
+
         public static class Thumbnail {
             private String path;
             private String extension;
@@ -43,4 +64,5 @@ public class MarvelResponse {
             }
         }
     }
+
 }

@@ -1,24 +1,21 @@
 package com.example.proyecto_final.clases;
 
+import java.util.List;
+
 public class MarvelCharacter {
     private String name;
     private String description;
     private String thumbnailUrl;
-    private int age;
-    private String powers;
-    private String yearOfBirth;
+    private List<String> comics;
 
-
-    public MarvelCharacter(String name, String description, String thumbnailUrl) {
+    public MarvelCharacter(String name, String description, String thumbnailUrl, List<String> comics) {
         this.name = name;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
-        this.age = age;
-        this.powers = powers;
-        this.yearOfBirth = yearOfBirth;
+        this.comics = comics;
     }
 
-    // Getters y Setters
+
     public String getName() {
         return name;
     }
@@ -43,27 +40,13 @@ public class MarvelCharacter {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public int getAge() {
-        return age;
+    public List<String> getComics() {
+        return comics;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getPowers() {
-        return powers;
-    }
-
-    public void setPowers(String powers) {
-        this.powers = powers;
-    }
-
-    public String getYearOfBirth() {
-        return yearOfBirth;
-    }
-
-    public void setYearOfBirth(String yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
+    public void setComics(List<String> comics) {
+        this.comics = comics;
     }
 }
+
+

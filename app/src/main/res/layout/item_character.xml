@@ -4,14 +4,12 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-
     <ImageView
         android:id="@+id/characterThumbnail"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:contentDescription="Imagen del personaje" />
-
 
     <TextView
         android:id="@+id/characterName"
@@ -25,18 +23,6 @@
         android:maxLines="1"
         android:text="Nombre del Personaje" />
 
-    <!-- Año de nacimiento -->
-    <TextView
-        android:id="@+id/characterYearOfBirth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:paddingTop="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Año de Nacimiento: 1980" />
-
-
     <TextView
         android:id="@+id/characterDescription"
         android:layout_width="match_parent"
@@ -47,14 +33,14 @@
         android:maxLines="3"
         android:text="Descripción del personaje" />
 
-
     <TextView
-        android:id="@+id/characterPowers"
+        android:id="@+id/characterComics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:paddingTop="4dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="Poderes: Fuerza, Vuelo" />
+        android:text="Cómics: No disponibles" />
 </LinearLayout>
+
