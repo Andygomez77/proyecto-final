@@ -34,7 +34,9 @@ android {
 dependencies {
 
     val fragment_version = "1.6.1"
-    implementation( "com.squareup.picasso:picasso:2.71828")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.picasso:picasso:2.71828")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
