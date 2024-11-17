@@ -62,7 +62,7 @@ public class comicadaptador extends RecyclerView.Adapter<comicadaptador.ViewHold
         }
 
         public void bind(comics comic) {
-            comicName.setText(comic.getNombre());
+            comicName.setText(comic.getNombre() != null ? comic.getNombre() : "Título desconocido");
             Picasso.get().load(comic.getImagen()).into(comicImage);
         }
     }

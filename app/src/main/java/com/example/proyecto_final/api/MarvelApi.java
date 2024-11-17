@@ -1,9 +1,5 @@
 package com.example.proyecto_final.api;
 
-
-
-import com.example.proyecto_final.api.MarvelResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -15,4 +11,12 @@ public interface MarvelApi {
             @Query("ts") String timestamp,
             @Query("hash") String hash
     );
+
+    @GET("v1/public/comics")
+    Call<ComicResponse> getComics(
+            @Query("apikey") String apiKey,
+            @Query("ts") String timestamp,
+            @Query("hash") String hash
+    );
 }
+

@@ -1,70 +1,110 @@
 package com.example.proyecto_final;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.proyecto_final.adaptadores.comicadaptador;
+import com.example.proyecto_final.api.ApiClient;
+import com.example.proyecto_final.api.ComicResponse;
+import com.example.proyecto_final.api.MarvelApi;
 import com.example.proyecto_final.clases.comics;
 import com.squareup.picasso.Picasso;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ComicFragment extends Fragment implements comicadaptador.OnComicClickListener {
 
     private RecyclerView rcv_comics;
+    private comicadaptador adaptador;
 
+    private final String PUBLIC_KEY = "ad200d22dc07ffd7365f647cad3abebd";
+    private final String PRIVATE_KEY = "af2c3744078efb314683abbbeaeb971474343937";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comic, container, false);
 
-        // Inicializar elementos del layout
 
         rcv_comics = view.findViewById(R.id.rcv_comics);
-
-        // Lista de cómics
-        List<comics> comicList = new ArrayList<>();
-        comics lis1 = new comics("Comic 1", "https://www.cuartomundo.cl/wp-content/uploads/2019/03/Portadas-marvel-70.jpg", "2021", "Descripción del cómic 1");
-        comics lis2 = new comics("Comic 2", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeUCPyR97PVReLNFFxzB2b6IHVIde3lS4dhw&s", "2020", "Descripción del cómic 2");
-        comics lis3 = new comics("Comic 3", "https://hablandodecomics.wordpress.com/wp-content/uploads/2012/01/portada-95-x-men.jpg?w=723", "2019", "Descripción del cómic 3");
-        comics lis4 = new comics("Comic 4", "https://www.cuartomundo.cl/wp-content/uploads/2019/03/ms.-marvel-1.jpg", "2018", "Descripción del cómic 4");
-        comicList.add(lis1);
-        comicList.add(lis2);
-        comicList.add(lis3);
-        comicList.add(lis4);
-
-        // Configurar RecyclerView
         rcv_comics.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        rcv_comics.setAdapter(new comicadaptador(comicList, this));
+
+
+        fetchComicsFromApi();
 
         return view;
     }
 
-    private void cerrarSesion() {
-        SharedPreferences preferences = getActivity().getSharedPreferences("MiAppPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear(); // Elimina todos los datos almacenados
-        editor.apply();
+    private void fetchComicsFromApi() {
+        MarvelApi api = ApiClient.getRetrofitInstance().create(MarvelApi.class);
+
+        String ts = "1"; // Timestamp fijo
+        String hash = generateHash(ts, PRIVATE_KEY, PUBLIC_KEY);
+
+        Call<ComicResponse> call = api.getComics(PUBLIC_KEY, ts, hash);
+        call.enqueue(new Callback<ComicResponse>() {
+            @Override
+            public void onResponse(Call<ComicResponse> call, Response<ComicResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                    List<ComicResponse.Comic> apiComics = response.body().getData().getResults();
+                    if (apiComics != null) {
+                        List<comics> comicList = new ArrayList<>();
+                        for (ComicResponse.Comic apiComic : apiComics) {
+                            String year = "Año desconocido";
+                            if (apiComic.getDates() != null && !apiComic.getDates().isEmpty()) {
+                                for (ComicResponse.Comic.Date date : apiComic.getDates()) {
+                                    if ("onsaleDate".equals(date.getType())) {
+                                        year = date.getDate().split("-")[0];
+                                        break;
+                                    }
+                                }
+                            }
+
+                            comics comic = new comics(
+                                    apiComic.getTitle(),
+                                    apiComic.getThumbnail().getUrl(),
+                                    year,
+                                    apiComic.getDescription() != null ? apiComic.getDescription() : "Sin sinopsis disponible"
+                            );
+                            comicList.add(comic);
+                        }
+
+                        adaptador = new comicadaptador(comicList, ComicFragment.this);
+                        rcv_comics.setAdapter(adaptador);
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron cómics", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Error al obtener los cómics: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ComicResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     @Override
     public void onComicClick(comics comic) {
@@ -78,16 +118,40 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().setDimAmount(0.8f);
 
+
         ImageView comicImageDialog = dialog.findViewById(R.id.comic_image_dialog);
         TextView comicNameDialog = dialog.findViewById(R.id.comic_name_dialog);
         TextView comicYearDialog = dialog.findViewById(R.id.comic_year_dialog);
         TextView comicDescriptionDialog = dialog.findViewById(R.id.comic_description_dialog);
 
+
         comicNameDialog.setText(comic.getNombre());
-        comicYearDialog.setText("Año: " + comic.getYear());
-        comicDescriptionDialog.setText(comic.getDescripcion());
+        comicYearDialog.setText("Año de lanzamiento: " + (comic.getYear() != null && !comic.getYear().isEmpty() ? comic.getYear() : "Año desconocido"));
+        comicDescriptionDialog.setText(comic.getDescripcion() != null && !comic.getDescripcion().isEmpty() ? comic.getDescripcion() : "Sin sinopsis disponible");
         Picasso.get().load(comic.getImagen()).into(comicImageDialog);
 
+
         dialog.show();
+    }
+
+
+    private String generateHash(String ts, String privateKey, String publicKey) {
+        try {
+            String value = ts + privateKey + publicKey;
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] hash = md.digest(value.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xFF & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

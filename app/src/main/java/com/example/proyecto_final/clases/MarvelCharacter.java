@@ -9,7 +9,7 @@ public class MarvelCharacter {
     private String yearOfBirth;
 
 
-    public MarvelCharacter(String name, String description, String thumbnailUrl, int age, String powers, String yearOfBirth) {
+    public MarvelCharacter(String name, String description, String thumbnailUrl) {
         this.name = name;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
