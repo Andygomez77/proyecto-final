@@ -92,7 +92,7 @@ public class FragmentActivity extends AppCompatActivity {
     private void cerrarSesion() {
         SharedPreferences preferences = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("isLoggedIn", false);  // Cerrar la sesión
+        editor.putBoolean("isLoggedIn", false);
         editor.apply();
     }
 }
