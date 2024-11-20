@@ -36,6 +36,7 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
 
     private RecyclerView rcv_comics;
     private comicadaptador adaptador;
+    private View loadingLayout;
 
     private final String PUBLIC_KEY = "ad200d22dc07ffd7365f647cad3abebd";
     private final String PRIVATE_KEY = "af2c3744078efb314683abbbeaeb971474343937";
@@ -44,10 +45,11 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_comic, container, false);
 
-
         rcv_comics = view.findViewById(R.id.rcv_comics);
         rcv_comics.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        loadingLayout = view.findViewById(R.id.loading_layout);
 
+        showLoading(true);
 
         fetchComicsFromApi();
 
@@ -55,37 +57,38 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
     }
 
     private void fetchComicsFromApi() {
+        showLoading(true);
+
         MarvelApi api = ApiClient.getRetrofitInstance().create(MarvelApi.class);
 
-        String ts = "1"; // Timestamp fijo
+        String ts = "1";
         String hash = generateHash(ts, PRIVATE_KEY, PUBLIC_KEY);
 
         Call<ComicResponse> call = api.getComics(PUBLIC_KEY, ts, hash);
         call.enqueue(new Callback<ComicResponse>() {
             @Override
-
             public void onResponse(Call<ComicResponse> call, Response<ComicResponse> response) {
+                showLoading(false);
+
                 if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                     List<ComicResponse.Comic> apiComics = response.body().getData().getResults();
                     if (apiComics != null) {
                         List<comics> comicList = new ArrayList<>();
                         for (ComicResponse.Comic apiComic : apiComics) {
-                            // Manejo de año de lanzamiento
+
                             String year = "Año desconocido";
                             if (apiComic.getDates() != null && !apiComic.getDates().isEmpty()) {
                                 for (ComicResponse.Comic.Date date : apiComic.getDates()) {
                                     if ("onsaleDate".equals(date.getType())) {
-                                        year = date.getDate().split("-")[0]; // Extrae el año
+                                        year = date.getDate().split("-")[0];
                                         break;
                                     }
                                 }
                             }
 
-
                             String description = apiComic.getDescription() != null && !apiComic.getDescription().isEmpty()
                                     ? apiComic.getDescription()
                                     : "Sin sinopsis disponible";
-
 
                             comics comic = new comics(
                                     apiComic.getTitle(),
@@ -95,7 +98,6 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
                             );
                             comicList.add(comic);
                         }
-
 
                         adaptador = new comicadaptador(comicList, ComicFragment.this);
                         rcv_comics.setAdapter(adaptador);
@@ -107,14 +109,13 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
                 }
             }
 
-
             @Override
             public void onFailure(Call<ComicResponse> call, Throwable t) {
+                showLoading(false);
                 Toast.makeText(getContext(), "Error de conexión: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 
     @Override
     public void onComicClick(comics comic) {
@@ -128,22 +129,18 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
         dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         dialog.getWindow().setDimAmount(0.8f);
 
-
         ImageView comicImageDialog = dialog.findViewById(R.id.comic_image_dialog);
         TextView comicNameDialog = dialog.findViewById(R.id.comic_name_dialog);
         TextView comicYearDialog = dialog.findViewById(R.id.comic_year_dialog);
         TextView comicDescriptionDialog = dialog.findViewById(R.id.comic_description_dialog);
-
 
         comicNameDialog.setText(comic.getNombre());
         comicYearDialog.setText("Año de lanzamiento: " + (comic.getYear() != null && !comic.getYear().isEmpty() ? comic.getYear() : "Año desconocido"));
         comicDescriptionDialog.setText(comic.getDescripcion() != null && !comic.getDescripcion().isEmpty() ? comic.getDescripcion() : "Sin sinopsis disponible");
         Picasso.get().load(comic.getImagen()).into(comicImageDialog);
 
-
         dialog.show();
     }
-
 
     private String generateHash(String ts, String privateKey, String publicKey) {
         try {
@@ -162,6 +159,16 @@ public class ComicFragment extends Fragment implements comicadaptador.OnComicCli
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    private void showLoading(boolean isLoading) {
+        if (isLoading) {
+            loadingLayout.setVisibility(View.VISIBLE);
+            rcv_comics.setVisibility(View.GONE);
+        } else {
+            loadingLayout.setVisibility(View.GONE);
+            rcv_comics.setVisibility(View.VISIBLE);
         }
     }
 }
