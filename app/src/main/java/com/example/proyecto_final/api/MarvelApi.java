@@ -18,5 +18,13 @@ public interface MarvelApi {
             @Query("ts") String timestamp,
             @Query("hash") String hash
     );
+
+    @GET("v1/public/characters")
+    Call<MarvelResponse> getCharacterByName(
+            @Query("apikey") String apikey,
+            @Query("ts") String ts,
+            @Query("hash") String hash,
+            @Query("nameStartsWith") String name
+    );
 }
 
